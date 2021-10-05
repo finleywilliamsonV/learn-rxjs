@@ -40,5 +40,5 @@ module.exports = (config) => {
         browsers: ['Chrome'],
         singleRun: false,
         restartOnFileChange: true,
-    });
-};
+    })
+}

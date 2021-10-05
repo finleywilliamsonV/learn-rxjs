@@ -6,7 +6,8 @@
         "start": "ng serve",
         "build": "ng build",
         "watch": "ng build --watch --configuration development",
-        "test": "ng test"
+        "test": "ng test",
+        "lint": "eslint \"./**\" --fix"
     },
     "private": true,
     "dependencies": {
@@ -33,6 +34,7 @@
         "eslint": "^7.32.0",
         "eslint-config-airbnb-base": "^14.2.1",
         "eslint-plugin-import": "^2.24.2",
+        "eslint-plugin-json": "^3.1.0",
         "jasmine-core": "~3.8.0",
         "karma": "~6.3.0",
         "karma-chrome-launcher": "~3.1.0",
