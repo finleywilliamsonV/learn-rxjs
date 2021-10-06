@@ -8,12 +8,12 @@ export class MockServerService {
     /**
      * count of responses sent
      */
-    responseCount: number = 0
+    protected responseCount: number = 0
 
     /**
      * subject emitting server responses
      */
-    serverResponseSub: Subject<string>
+    readonly serverResponseSub: Subject<string>
 
     /**
      * Constructor
