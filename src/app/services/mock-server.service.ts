@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core'
 import { Subject } from 'rxjs'
 
 @Injectable({
-    providedIn: 'root',
+    providedIn: 'root'
 })
 export class MockServerService {
     /**
@@ -13,13 +13,13 @@ export class MockServerService {
     /**
      * subject emitting server responses
      */
-    readonly serverResponseSub: Subject<string>
+    readonly serverResponses: Subject<string>
 
     /**
      * Constructor
      */
     constructor() {
-        this.serverResponseSub = new Subject<string>()
+        this.serverResponses = new Subject<string>()
     }
 
     // *---------------------------------------------*
@@ -30,7 +30,7 @@ export class MockServerService {
      * Requests a single response from the server
      * @param delay the time until the response is returned
      */
-    singleRequest(delay: number): void {
+    singleRequest(delay: number = 100): void {
         setTimeout(() => {
             this.sendResponse()
         }, delay)
@@ -41,10 +41,10 @@ export class MockServerService {
      * @param numberOfRequests number of requests to make
      * @param delay delay between each request
      */
-    multiRequest(numberOfRequests: number, delay: number): void {
-        const requestsRemaining: number = numberOfRequests
-        const intervalId: NodeJS.Timeout = setInterval(() => {
-            if (requestsRemaining > 0) {
+    multiRequest(numberOfRequests: number, delay: number = 100): void {
+        let requestsRemaining: number = numberOfRequests
+        const intervalId = setInterval(() => {
+            if (requestsRemaining-- > 0) {
                 this.sendResponse()
             } else {
                 clearInterval(intervalId)
@@ -61,6 +61,6 @@ export class MockServerService {
      * @param responseText additional response text
      */
     private sendResponse(responseText?: string): void {
-        this.serverResponseSub.next(`Server Response ${++this.responseCount}${responseText && `: ${responseText}`}`)
+        this.serverResponses.next(`Server Response ${++this.responseCount}${responseText ? `: ${responseText}` : ''}`)
     }
 }

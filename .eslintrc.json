@@ -9,14 +9,12 @@
         "airbnb-base",
         "plugin:json/recommended"
     ],
-    "globals": {
-        "NodeJS": true
-    },
     "ignorePatterns": [
         "*.json",
         "*.md",
         "*.html",
-        "*.ico"
+        "*.ico",
+        "*.scss"
     ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
@@ -27,6 +25,13 @@
         "@typescript-eslint"
     ],
     "rules": {
+        "class-methods-use-this": "warn",
+        "comma-dangle": [
+            "error",
+            {
+                "functions": "never"
+            }
+        ],
         "global-require": "off",
         "import/extensions": [
             "error",
@@ -41,18 +46,30 @@
             "error",
             4
         ],
+        "lines-between-class-members": "off",
         "max-len": [
             "warn",
             120
         ],
         "no-console": "off",
+        "no-empty-function": "warn",
         "no-plusplus": "off",
         "no-unused-vars": "warn",
+        "no-useless-constructor": "warn",
+        "padded-blocks": "off",
         "semi": [
             "error",
             "never"
         ],
-        "spaced-comment": ["error", "always", { "exceptions": ["-"] }]
+        "spaced-comment": [
+            "error",
+            "always",
+            {
+                "exceptions": [
+                    "-"
+                ]
+            }
+        ]
     },
     "settings": {
         "import/resolver": {

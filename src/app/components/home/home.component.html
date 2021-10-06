@@ -1,1 +1,39 @@
-<h1>We're Running!</h1>
+<h1 class="mt-5">We're Running!</h1>
+
+<div
+    class="mt-5"
+    id="faIcons">
+    Here's some font awesome icons
+    <ul>
+        <li>
+            <fa-icon [icon]="faCoffee"></fa-icon>
+        </li>
+        <li>
+            <fa-icon [icon]="faAngry"></fa-icon>
+        </li>
+        <li>
+            <fa-icon [icon]="faAngryReg"></fa-icon>
+        </li>
+    </ul>
+</div>
+
+<div class="mt-5">
+    <p>Server Requests</p>
+    <button
+        class="btn btn-success"
+        (click)="sendOneRequest()">
+        Send One
+    </button>
+    <button
+        class="btn btn-success"
+        (click)="sendFiveRequests()">
+        Send Five
+    </button>
+</div>
+
+<div class="mt-5">
+    <p>Server Responses</p>
+    <ul>
+        <li *ngFor="let response of serverResponses">{{response}}</li>
+    </ul>
+</div>
