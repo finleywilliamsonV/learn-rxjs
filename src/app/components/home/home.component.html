@@ -1,9 +1,9 @@
 <h1 class="mt-5">We're Running!</h1>
 
 <div
-    class="mt-5"
+    class="row mt-5"
     id="faIcons">
-    Here's some font awesome icons
+    Here's some font awesome icons!
     <ul>
         <li>
             <fa-icon [icon]="faCoffee"></fa-icon>
@@ -17,23 +17,70 @@
     </ul>
 </div>
 
-<div class="mt-5">
-    <p>Server Requests</p>
-    <button
-        class="btn btn-success"
-        (click)="sendOneRequest()">
-        Send One
-    </button>
-    <button
-        class="btn btn-success"
-        (click)="sendFiveRequests()">
-        Send Five
-    </button>
+<div
+    id="serverRequestPanel"
+    class="row mt-5">
+
+    <p class="outline text-center">Server Requests</p>
+
+    <div
+        id="serverRequestButtons"
+        class="text-center mt-2">
+        <button
+            class="btn btn-primary"
+            (click)="sendOneRequest()">
+            Send One
+        </button>
+        <button
+            class="btn btn-primary ms-1"
+            (click)="sendFiveRequests()">
+            Send Five
+        </button>
+    </div>
+
+    <div class="text-center">
+        <div class="form-check form-check-inline mt-3">
+            <input
+                id="addOneCheckbox"
+                class="form-check-input"
+                type="checkbox"
+                [(ngModel)]="processingOptions.addOne">
+            <label
+                class="form-check-label"
+                for="flexCheckDefault">
+                Add One
+            </label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input
+                id="mergeCheckbox"
+                class="form-check-input"
+                type="checkbox"
+                [(ngModel)]="processingOptions.merge">
+            <label
+                class="form-check-label"
+                for="flexCheckChecked">
+                Merge
+            </label>
+        </div>
+    </div>
 </div>
 
-<div class="mt-5">
-    <p>Server Responses</p>
-    <ul>
-        <li *ngFor="let response of serverResponses">{{response}}</li>
-    </ul>
+<div class="row">
+    <div class="col-6">
+        <div class="mt-5">
+            <p class="outline text-center">Server Responses</p>
+            <ul>
+                <li *ngFor="let response of serverResponses">{{response}}</li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-6">
+        <div class="mt-5">
+            <p class="outline text-center">Server Responses</p>
+            <ul>
+                <li *ngFor="let response of serverResponses">{{response}}</li>
+            </ul>
+        </div>
+    </div>
 </div>

@@ -29,6 +29,10 @@
         "comma-dangle": [
             "error",
             {
+                "arrays": "never",
+                "objects": "always",
+                "imports": "never",
+                "exports": "never",
                 "functions": "never"
             }
         ],
@@ -47,6 +51,7 @@
             4
         ],
         "lines-between-class-members": "off",
+        "linebreak-style": "off",
         "max-len": [
             "warn",
             120

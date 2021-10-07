@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core'
 import { Subject } from 'rxjs'
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class MockServerService {
     /**
@@ -13,13 +13,13 @@ export class MockServerService {
     /**
      * subject emitting server responses
      */
-    readonly serverResponses: Subject<string>
+    readonly serverResponses: Subject<number>
 
     /**
      * Constructor
      */
     constructor() {
-        this.serverResponses = new Subject<string>()
+        this.serverResponses = new Subject<number>()
     }
 
     // *---------------------------------------------*
@@ -31,6 +31,7 @@ export class MockServerService {
      * @param delay the time until the response is returned
      */
     singleRequest(delay: number = 100): void {
+        this.responseCount = 0
         setTimeout(() => {
             this.sendResponse()
         }, delay)
@@ -42,6 +43,7 @@ export class MockServerService {
      * @param delay delay between each request
      */
     multiRequest(numberOfRequests: number, delay: number = 100): void {
+        this.responseCount = 0
         let requestsRemaining: number = numberOfRequests
         const intervalId = setInterval(() => {
             if (requestsRemaining-- > 0) {
@@ -60,7 +62,7 @@ export class MockServerService {
      * Pushes a response onto the response subject
      * @param responseText additional response text
      */
-    private sendResponse(responseText?: string): void {
-        this.serverResponses.next(`Server Response ${++this.responseCount}${responseText ? `: ${responseText}` : ''}`)
+    private sendResponse(): void {
+        this.serverResponses.next(++this.responseCount)
     }
 }
