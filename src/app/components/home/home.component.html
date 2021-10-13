@@ -1,5 +1,7 @@
 <h1 class="mt-5">We're Running!</h1>
 
+
+<!-- Font Awesome Icons -->
 <div
     class="row mt-5"
     id="faIcons">
@@ -17,69 +19,86 @@
     </ul>
 </div>
 
+
+<!-- Server Request Panel -->
 <div
     id="serverRequestPanel"
     class="row mt-5">
+    <div class="col-6">
 
-    <p class="outline text-center">Server Requests</p>
+        <!-- panel title -->
+        <p class="outline text-center p-2">Server Requests</p>
 
-    <div
-        id="serverRequestButtons"
-        class="text-center mt-2">
-        <button
-            class="btn btn-primary"
-            (click)="sendOneRequest()">
-            Send One
-        </button>
-        <button
-            class="btn btn-primary ms-1"
-            (click)="sendFiveRequests()">
-            Send Five
-        </button>
-    </div>
+        <div class="outline p-4">
 
-    <div class="text-center">
-        <div class="form-check form-check-inline mt-3">
-            <input
-                id="addOneCheckbox"
-                class="form-check-input"
-                type="checkbox"
-                [(ngModel)]="processingOptions.addOne">
-            <label
-                class="form-check-label"
-                for="flexCheckDefault">
-                Add One
-            </label>
-        </div>
-        <div class="form-check form-check-inline">
-            <input
-                id="mergeCheckbox"
-                class="form-check-input"
-                type="checkbox"
-                [(ngModel)]="processingOptions.merge">
-            <label
-                class="form-check-label"
-                for="flexCheckChecked">
-                Merge
-            </label>
+            <!-- buttons -->
+            <div
+                id="serverRequestButtons"
+                class="text-center mt-2">
+                <button
+                    class="btn btn-primary"
+                    (click)="sendOneRequest()">
+                    Send One
+                </button>
+                <button
+                    class="btn btn-primary ms-1"
+                    (click)="sendFiveRequests()">
+                    Send Five
+                </button>
+                <button
+                    class="btn btn-danger ms-1"
+                    (click)="resetServer()">
+                    Reset Server
+                </button>
+            </div>
+        
+            <!-- checkboxes -->
+            <div class="text-center">
+
+                <div class="form-check form-check-inline mt-4">
+                    <input
+                        id="addOneCheckbox"
+                        class="form-check-input"
+                        type="checkbox"
+                        [(ngModel)]="processingOptions.addOne">
+                    <label
+                        class="form-check-label"
+                        for="flexCheckDefault">
+                        Add One
+                    </label>
+                </div>
+
+                <div class="form-check form-check-inline">
+                    <input
+                        id="mergeCheckbox"
+                        class="form-check-input"
+                        type="checkbox"
+                        [(ngModel)]="processingOptions.filterOdds">
+                    <label
+                        class="form-check-label"
+                        for="flexCheckChecked">
+                        Filter Odds
+                    </label>
+                </div>
+
+            </div>
         </div>
     </div>
 </div>
 
-<div class="row">
+<!-- Server Response Panelc -->
+<div class="row mt-5">
     <div class="col-6">
-        <div class="mt-5">
-            <p class="outline text-center">Server Responses</p>
+
+        <!-- title -->
+        <p class="outline text-center p-2">Server Responses</p>
+
+        <!-- response container -->
+        <div class="mt-2 response-container outline">
             <ul>
-                <li *ngFor="let response of serverResponses">{{response}}</li>
-            </ul>
-        </div>
-    </div>
-    <div class="col-6">
-        <div class="mt-5">
-            <p class="outline text-center">Server Responses</p>
-            <ul>
-                <li *ngFor="let response of serverResponses">{{response}}</li>
+                <li *ngFor="let response of serverResponses">
+                    Response {{response.responseNumber}} --> Value: {{response.responseValue}}
+                </li>
             </ul>
         </div>
     </div>

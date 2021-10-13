@@ -8,7 +8,7 @@ export class MockServerService {
     /**
      * count of responses sent
      */
-    protected responseCount: number = 0
+    private responseCount: number = 0
 
     /**
      * subject emitting server responses
@@ -31,7 +31,6 @@ export class MockServerService {
      * @param delay the time until the response is returned
      */
     singleRequest(delay: number = 100): void {
-        this.responseCount = 0
         setTimeout(() => {
             this.sendResponse()
         }, delay)
@@ -43,7 +42,6 @@ export class MockServerService {
      * @param delay delay between each request
      */
     multiRequest(numberOfRequests: number, delay: number = 100): void {
-        this.responseCount = 0
         let requestsRemaining: number = numberOfRequests
         const intervalId = setInterval(() => {
             if (requestsRemaining-- > 0) {
@@ -52,6 +50,13 @@ export class MockServerService {
                 clearInterval(intervalId)
             }
         }, delay)
+    }
+
+    /**
+     * Resets the response count to 0
+     */
+    resetServer() {
+        this.responseCount = 0
     }
 
     // *---------------------------------------------*

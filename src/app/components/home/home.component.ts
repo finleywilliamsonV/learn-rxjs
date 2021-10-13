@@ -1,10 +1,8 @@
 import { Component, OnInit } from '@angular/core'
 import { faAngry as faAngryReg } from '@fortawesome/free-regular-svg-icons'
 import { faAngry, faCoffee, IconDefinition } from '@fortawesome/free-solid-svg-icons'
-import {
-    identity, iif, merge, OperatorFunction, Subscription
-} from 'rxjs'
-import { map, take, tap } from 'rxjs/operators'
+import { Subscription } from 'rxjs'
+import { filter, map, tap } from 'rxjs/operators'
 import { MockServerService } from '../../services/mock-server.service'
 
 @Component({
@@ -20,56 +18,80 @@ export class HomeComponent implements OnInit {
     public faAngryReg: IconDefinition = faAngryReg
 
     // array of responses
-    public serverResponses: number[]
+    public serverResponses: {
+        responseNumber: number,
+        responseValue: number,
+    }[]
+
+    // options for processing server responses
+    public readonly processingOptions = {
+        addOne: false,
+        filterOdds: false,
+    }
 
     // initialized in onInit
     public serverSubscription!: Subscription
 
-    // processing options
-    public processingOptions: Record<string, boolean> = {
-        merge: false,
-        addOne: true,
-    }
+    // count of response from the server
+    private responseCount: number
 
+    /**
+     * Constructor function
+     * @param mockServer
+     */
     // eslint-disable-next-line no-unused-vars
     constructor(private mockServer: MockServerService) {
         this.serverResponses = []
+        this.responseCount = 0
     }
 
     ngOnInit(): void {
+
         // subscribe to the server responses
+        this.mockServer.serverResponses.pipe(
+            tap(
+                () => this.responseCount++
+            ),
+            map(
+                (value: number) => (this.processingOptions.addOne ? value + 1 : value)
+            ),
+            filter(
+                (value: number) => (this.processingOptions.filterOdds ? value % 2 === 1 : true)
+            )
+        ).subscribe(
+            (finalValue: number) => {
+                this.serverResponses.push({
+                    responseNumber: this.responseCount,
+                    responseValue: finalValue,
+                })
+            }
+        )
     }
 
     //* PUBLIC METHODS *//
 
+    /**
+     * Sends a single request to the server
+     */
     sendOneRequest(): void {
-        this.serverResponses = []
-        console.log('\nsending one request')
-        this.resubscribe()
         this.mockServer.singleRequest()
     }
 
+    /**
+     * Sends 5 requests to the server
+     */
     sendFiveRequests(): void {
-        this.serverResponses = []
-        console.log('\nsending five requests')
-        this.resubscribe()
         this.mockServer.multiRequest(5)
     }
 
-    //* PRIVATE METHODS */
-
-    private resubscribe(): void {
-        this.serverSubscription = this.mockServer.serverResponses.pipe(
-            (this.processingOptions.addOne
-                ? map((x) => x + 1)
-                : identity)
-        ).pipe(
-            take(2),
-            tap((x) => console.log(x))
-        ).subscribe(
-            (value: number) => {
-                this.serverResponses.push(value)
-            }
-        )
+    /**
+     * Clears the response array and resets the server
+     */
+    resetServer(): void {
+        this.serverResponses = []
+        this.responseCount = 0
+        this.mockServer.resetServer()
     }
+
+    //* PRIVATE METHODS */
 }
