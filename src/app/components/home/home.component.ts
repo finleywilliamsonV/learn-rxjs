@@ -32,6 +32,9 @@ export class HomeComponent implements OnInit {
     // initialized in onInit
     public serverSubscription!: Subscription
 
+    // Words for words filter panel
+    public wordsToFilter: string[]
+
     // count of response from the server
     private responseCount: number
 
@@ -43,6 +46,17 @@ export class HomeComponent implements OnInit {
     constructor(private mockServer: MockServerService) {
         this.serverResponses = []
         this.responseCount = 0
+        this.wordsToFilter = [
+            'calendar',
+            'provincial',
+            'prospect',
+            'announce',
+            'exotic',
+            'fitness',
+            'recognise',
+            'leadership',
+            'originate'
+        ]
     }
 
     ngOnInit(): void {

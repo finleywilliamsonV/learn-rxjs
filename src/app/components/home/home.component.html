@@ -1,6 +1,5 @@
 <h1 class="mt-5">We're Running!</h1>
 
-
 <!-- Font Awesome Icons -->
 <div
     class="row mt-5"
@@ -19,16 +18,16 @@
     </ul>
 </div>
 
+<!-- row 1 -->
+<div class="row mt-5">
 
-<!-- Server Request Panel -->
-<div
-    id="serverRequestPanel"
-    class="row mt-5">
+    <!-- Server Request Panel -->
     <div class="col-6">
 
         <!-- panel title -->
         <p class="outline text-center p-2">Server Requests</p>
 
+        <!-- button/filter panel -->
         <div class="outline p-4">
 
             <!-- buttons -->
@@ -51,7 +50,7 @@
                     Reset Server
                 </button>
             </div>
-        
+
             <!-- checkboxes -->
             <div class="text-center">
 
@@ -84,10 +83,37 @@
             </div>
         </div>
     </div>
+
+    <!-- Word Filter Panel -->
+    <div class="col-6">
+
+        <!-- title -->
+        <p class="outline text-center p-2">Words to Filter</p>
+
+        <!-- words container -->
+        <div class="mt-2 p-4 outline">
+            <div class="container">
+
+                <div class="row">
+                    <div
+                        *ngFor="let word of wordsToFilter"
+                        class="col-4 text-center my-1">
+                        {{word}}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
 </div>
 
-<!-- Server Response Panelc -->
-<div class="row mt-5">
+<!-- Row 2 -->
+<div
+    id="serverResponsePanel"
+    class="row mt-5">
+    
+    <!-- Server Response Panel -->
     <div class="col-6">
 
         <!-- title -->
@@ -100,6 +126,23 @@
                     Response {{response.responseNumber}} --> Value: {{response.responseValue}}
                 </li>
             </ul>
+        </div>
+    </div>
+
+    <!-- Word Filter Panel -->
+    <div class="col-6">
+
+        <!-- title -->
+        <p class="outline text-center p-2">Word Filters</p>
+
+        <!-- filter container -->
+        <div class="mt-2 p-3 outline word-filter-container">
+            
+            <label for="wordsWith">Filter Words with Letters:</label>
+            <input name="wordsWith" type="text" class="form-control">
+
+            <label for="wordsWithout" class="mt-2">Filter Words without Letters:</label>
+            <input name="wordsWithout" type="text" class="form-control">
         </div>
     </div>
 </div>

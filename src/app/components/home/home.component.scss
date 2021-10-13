@@ -5,7 +5,11 @@
 
 .response-container {
     overflow-y: auto;
-    height: 14.7vh;
+    height: 18vh;
     display: flex;
     flex-direction: column-reverse;
+}
+
+.word-filter-container {
+    height: 18vh;
 }
