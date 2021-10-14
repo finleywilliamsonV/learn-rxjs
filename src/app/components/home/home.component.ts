@@ -1,5 +1,10 @@
 import { BehaviorSubject, combineLatest, Subscription } from 'rxjs'
-import { Component, OnInit } from '@angular/core'
+import {
+    Component,
+    ElementRef,
+    OnInit,
+    ViewChild
+    } from '@angular/core'
 import { faAngry as faAngryReg } from '@fortawesome/free-regular-svg-icons'
 import { faAngry, faCoffee, IconDefinition } from '@fortawesome/free-solid-svg-icons'
 import { filter, map, tap } from 'rxjs/operators'
@@ -39,8 +44,15 @@ export class HomeComponent implements OnInit {
     private responseCount: number
 
     // word filter observables
-    private readonly showWordsWithSubject$: BehaviorSubject<string | null>
-    private readonly showWordsWithoutSubject$: BehaviorSubject<string | null>
+    private readonly wordsWithFilterSubject$: BehaviorSubject<string | null>
+    private readonly wordsWithoutFilterSubject$: BehaviorSubject<string | null>
+
+    // view children
+    @ViewChild('wordsWithInput')
+    private wordsWithInput!: ElementRef<HTMLInputElement>
+
+    @ViewChild('wordsWithoutInput')
+    private wordsWithoutInput!: ElementRef<HTMLInputElement>
 
     /**
      * Constructor function
@@ -54,8 +66,8 @@ export class HomeComponent implements OnInit {
         this.responseCount = 0
 
         // initialize word filter vars
-        this.showWordsWithSubject$ = new BehaviorSubject<string | null>(null)
-        this.showWordsWithoutSubject$ = new BehaviorSubject<string | null>(null)
+        this.wordsWithFilterSubject$ = new BehaviorSubject<string | null>(null)
+        this.wordsWithoutFilterSubject$ = new BehaviorSubject<string | null>(null)
         this.wordsToFilter = [
             'calendar',
             'provincial',
@@ -72,6 +84,9 @@ export class HomeComponent implements OnInit {
         }))
     }
 
+    /**
+     * On Init Hook
+     */
     ngOnInit(): void {
         this.setupServerPanel()
         this.setupWordFilterPanel()
@@ -111,7 +126,7 @@ export class HomeComponent implements OnInit {
     onWordsWithChange($event: Event): void {
         const target: HTMLInputElement = $event.target as HTMLInputElement
         const nextValue: string | null = target.value === '' ? null : target.value
-        this.showWordsWithSubject$.next(nextValue)
+        this.wordsWithFilterSubject$.next(nextValue)
     }
 
     /**
@@ -121,7 +136,23 @@ export class HomeComponent implements OnInit {
     onWordsWithoutChange($event: Event): void {
         const target: HTMLInputElement = $event.target as HTMLInputElement
         const nextValue: string | null = target.value === '' ? null : target.value
-        this.showWordsWithoutSubject$.next(nextValue)
+        this.wordsWithoutFilterSubject$.next(nextValue)
+    }
+
+    /**
+     * Clears the input for words with given letters
+     */
+    clearWordsWithInput(): void {
+        this.wordsWithInput.nativeElement.value = ''
+        this.wordsWithFilterSubject$.next('')
+    }
+
+    /**
+     * Clears the input for words without given letters
+     */
+    clearWordsWithoutInput(): void {
+        this.wordsWithoutInput.nativeElement.value = ''
+        this.wordsWithoutFilterSubject$.next('')
     }
 
     //* ------------------------- PRIVATE METHODS ------------------------- *//
@@ -160,8 +191,8 @@ export class HomeComponent implements OnInit {
 
         // combine the two behavior subjects
         return combineLatest([
-            this.showWordsWithSubject$,
-            this.showWordsWithoutSubject$
+            this.wordsWithFilterSubject$,
+            this.wordsWithoutFilterSubject$
         ]).subscribe(
             ([
                 lettersToShowWords,
