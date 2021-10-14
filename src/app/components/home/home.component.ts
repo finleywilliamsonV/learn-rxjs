@@ -1,7 +1,8 @@
+/* eslint-disable class-methods-use-this */
 import { Component, OnInit } from '@angular/core'
 import { faAngry as faAngryReg } from '@fortawesome/free-regular-svg-icons'
 import { faAngry, faCoffee, IconDefinition } from '@fortawesome/free-solid-svg-icons'
-import { Subscription } from 'rxjs'
+import { BehaviorSubject, combineLatest, Subscription } from 'rxjs'
 import { filter, map, tap } from 'rxjs/operators'
 import { MockServerService } from '../../services/mock-server.service'
 
@@ -29,14 +30,15 @@ export class HomeComponent implements OnInit {
         filterOdds: false,
     }
 
-    // initialized in onInit
-    public serverSubscription!: Subscription
-
     // Words for words filter panel
     public wordsToFilter: string[]
 
     // count of response from the server
     private responseCount: number
+
+    // word filter observables
+    private readonly wordsWithSubject$: BehaviorSubject<string | null>
+    private readonly wordsWithoutSubject$: BehaviorSubject<string | null>
 
     /**
      * Constructor function
@@ -44,8 +46,14 @@ export class HomeComponent implements OnInit {
      */
     // eslint-disable-next-line no-unused-vars
     constructor(private mockServer: MockServerService) {
+
+        // initialize server vars
         this.serverResponses = []
         this.responseCount = 0
+
+        // initialize word filter vars
+        this.wordsWithSubject$ = new BehaviorSubject<string | null>(null)
+        this.wordsWithoutSubject$ = new BehaviorSubject<string | null>(null)
         this.wordsToFilter = [
             'calendar',
             'provincial',
@@ -60,29 +68,11 @@ export class HomeComponent implements OnInit {
     }
 
     ngOnInit(): void {
-
-        // subscribe to the server responses
-        this.mockServer.serverResponses.pipe(
-            tap(
-                () => this.responseCount++
-            ),
-            map(
-                (value: number) => (this.processingOptions.addOne ? value + 1 : value)
-            ),
-            filter(
-                (value: number) => (this.processingOptions.filterOdds ? value % 2 === 1 : true)
-            )
-        ).subscribe(
-            (finalValue: number) => {
-                this.serverResponses.push({
-                    responseNumber: this.responseCount,
-                    responseValue: finalValue,
-                })
-            }
-        )
+        this.setupServerPanel()
+        this.setupWordFilterPanel()
     }
 
-    //* PUBLIC METHODS *//
+    //* PUBLIC SERVER METHODS *//
 
     /**
      * Sends a single request to the server
@@ -107,5 +97,62 @@ export class HomeComponent implements OnInit {
         this.mockServer.resetServer()
     }
 
+    //* PUBLIC WORD FILTER METHODS *//
+    onWordsWithChange($event: Event): void {
+        const target: HTMLInputElement = $event.target as HTMLInputElement
+        this.wordsWithSubject$.next(target.value)
+    }
+
+    onWordsWithoutChange($event: Event): void {
+        const target: HTMLInputElement = $event.target as HTMLInputElement
+        this.wordsWithoutSubject$.next(target.value)
+    }
+
     //* PRIVATE METHODS */
+
+    /**
+     * Sets up the pipe and subscription to the mock server service
+     * @returns Subscription to the mock server service
+     */
+    private setupServerPanel(): Subscription {
+        // subscribe to the server responses
+        return this.mockServer.serverResponses.pipe(
+            tap(
+                () => this.responseCount++
+            ),
+            map(
+                (value: number) => (this.processingOptions.addOne ? value + 1 : value)
+            ),
+            filter(
+                (value: number) => (this.processingOptions.filterOdds ? value % 2 === 1 : true)
+            )
+        ).subscribe(
+            (finalValue: number) => {
+                this.serverResponses.push({
+                    responseNumber: this.responseCount,
+                    responseValue: finalValue,
+                })
+            }
+        )
+    }
+
+    /**
+     * Sets up the pipe and subscription to the word filter observables
+     * @returns Subscription to the mock server service
+     */
+    private setupWordFilterPanel(): Subscription {
+        return combineLatest([
+            this.wordsWithSubject$,
+            this.wordsWithoutSubject$
+        ]).subscribe(
+            ([
+                filterWordsWith,
+                filterWordsWithout
+            ]: (string | null)[]) => {
+
+                console.log('filterWordsWith:', filterWordsWith)
+                console.log('filterWordsWithout:', filterWordsWithout)
+            }
+        )
+    }
 }

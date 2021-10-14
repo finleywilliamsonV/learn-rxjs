@@ -112,7 +112,7 @@
 <div
     id="serverResponsePanel"
     class="row mt-5">
-    
+
     <!-- Server Response Panel -->
     <div class="col-6">
 
@@ -137,12 +137,24 @@
 
         <!-- filter container -->
         <div class="mt-2 p-3 outline word-filter-container">
-            
-            <label for="wordsWith">Filter Words with Letters:</label>
-            <input name="wordsWith" type="text" class="form-control">
 
-            <label for="wordsWithout" class="mt-2">Filter Words without Letters:</label>
-            <input name="wordsWithout" type="text" class="form-control">
+            <label for="wordsWith">Filter Words with Letters:</label>
+            <input
+                name="wordsWith"
+                (input)="onWordsWithChange($event)"
+                type="text"
+                class="form-control">
+
+            <label
+                for="wordsWithout"
+                class="mt-2">
+                Filter Words without Letters:
+            </label>
+            <input
+                name="wordsWithout"
+                (input)="onWordsWithoutChange($event)"
+                type="text"
+                class="form-control">
         </div>
     </div>
 </div>
