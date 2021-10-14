@@ -5,11 +5,13 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'
 import { AppRoutingModule } from './app-routing.module'
 import { AppComponent } from './app.component'
 import { HomeComponent } from './components/home/home.component'
+import { ServerRequestPanelComponent } from './components/server-request-panel/server-request-panel.component'
 
 @NgModule({
     declarations: [
         AppComponent,
-        HomeComponent
+        HomeComponent,
+        ServerRequestPanelComponent
     ],
     imports: [
         BrowserModule,

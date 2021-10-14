@@ -7,8 +7,6 @@ import {
 } from '@angular/core'
 import { faAngry as faAngryReg } from '@fortawesome/free-regular-svg-icons'
 import { faAngry, faCoffee, IconDefinition } from '@fortawesome/free-solid-svg-icons'
-import { filter, map, tap } from 'rxjs/operators'
-import { MockServerService } from '../../services/mock-server.service'
 
 @Component({
     selector: 'app-home',
@@ -22,26 +20,11 @@ export class HomeComponent implements OnInit {
     public faAngry: IconDefinition = faAngry
     public faAngryReg: IconDefinition = faAngryReg
 
-    // array of responses
-    public serverResponses: {
-        responseNumber: number,
-        responseValue: number,
-    }[]
-
-    // options for processing server responses
-    public readonly processingOptions = {
-        addThree: false,
-        filterOdds: false,
-    }
-
     // Words for words filter panel
     public wordsToFilter: {
         word: string,
         visibility: boolean
     }[]
-
-    // count of response from the server
-    private responseCount: number
 
     // word filter observables
     private readonly wordsWithFilterSubject$: BehaviorSubject<string | null>
@@ -59,11 +42,7 @@ export class HomeComponent implements OnInit {
      * @param mockServer
      */
     // eslint-disable-next-line no-unused-vars
-    constructor(private mockServer: MockServerService) {
-
-        // initialize server vars
-        this.serverResponses = []
-        this.responseCount = 0
+    constructor() {
 
         // initialize word filter vars
         this.wordsWithFilterSubject$ = new BehaviorSubject<string | null>(null)
@@ -88,33 +67,7 @@ export class HomeComponent implements OnInit {
      * On Init Hook
      */
     ngOnInit(): void {
-        this.setupServerPanel()
         this.setupWordFilterPanel()
-    }
-
-    //* ------------------------- PUBLIC SERVER METHODS ------------------------- *//
-
-    /**
-     * Sends a single request to the server
-     */
-    sendOneRequest(): void {
-        this.mockServer.singleRequest()
-    }
-
-    /**
-     * Sends 5 requests to the server
-     */
-    sendFiveRequests(): void {
-        this.mockServer.multiRequest(5)
-    }
-
-    /**
-     * Clears the response array and resets the server
-     */
-    resetServer(): void {
-        this.serverResponses = []
-        this.responseCount = 0
-        this.mockServer.resetServer()
     }
 
     //* ------------------------- PUBLIC WORD FILTER METHODS ------------------------- *//
@@ -156,32 +109,6 @@ export class HomeComponent implements OnInit {
     }
 
     //* ------------------------- PRIVATE METHODS ------------------------- *//
-
-    /**
-     * Sets up the pipe and subscription to the mock server service
-     * @returns Subscription to the mock server service
-     */
-    private setupServerPanel(): Subscription {
-        // subscribe to the server responses
-        return this.mockServer.serverResponses.pipe(
-            tap(
-                () => this.responseCount++
-            ),
-            map(
-                (value: number) => (this.processingOptions.addThree ? value + 3 : value)
-            ),
-            filter(
-                (value: number) => (this.processingOptions.filterOdds ? value % 2 === 1 : true)
-            )
-        ).subscribe(
-            (finalValue: number) => {
-                this.serverResponses.push({
-                    responseNumber: this.responseCount,
-                    responseValue: finalValue,
-                })
-            }
-        )
-    }
 
     /**
      * Sets up the pipe and subscription to the word filter observables
