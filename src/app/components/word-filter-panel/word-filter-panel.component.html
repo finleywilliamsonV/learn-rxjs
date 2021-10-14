@@ -1,0 +1,74 @@
+<div class="row">
+
+    <div class="col-12 mb-4">
+        <!-- title -->
+        <p class="mb-2 p-2 outline text-center feature-container-header">Words to Filter</p>
+
+        <!-- words container -->
+        <div class="mt-2 p-4 outline feature-container-body">
+            <div class="container">
+
+                <div class="row">
+                    <div
+                        *ngFor="let word of wordsToFilter"
+                        class="col-4 text-center my-1"
+                        [style.visibility]="word.visibility ? 'visible' : 'hidden'">
+                        {{word.word}}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12">
+
+        <!-- title -->
+        <p class="mb-2 p-2 outline text-center feature-container-header">Word Filters</p>
+
+        <!-- filter container -->
+        <div class="mt-2 p-3 outline word-filter-container feature-container-body">
+
+            <label for="wordsWith">Show Words with All of These Letters:</label>
+
+            <div class="input-group">
+                <input
+                    name="wordsWith"
+                    (input)="onWordsWithChange($event)"
+                    type="text"
+                    class="form-control"
+                    #wordsWithInput>
+                <div class="input-group-append">
+                    <button
+                        class="btn btn-danger"
+                        (click)="clearWordsWithInput()">
+                        Clear
+                    </button>
+                </div>
+            </div>
+
+            <label
+                for="wordsWithout"
+                class="mt-2">
+                Show Words without Any of These Letters:
+            </label>
+
+            <div class="input-group">
+                <input
+                    name="wordsWithout"
+                    (input)="onWordsWithoutChange($event)"
+                    type="text"
+                    class="form-control"
+                    #wordsWithoutInput>
+                <div class="input-group-append">
+                    <button
+                        class="btn btn-danger"
+                        (click)="clearWordsWithoutInput()">
+                        Clear
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

@@ -6,12 +6,14 @@ import { AppRoutingModule } from './app-routing.module'
 import { AppComponent } from './app.component'
 import { HomeComponent } from './components/home/home.component'
 import { ServerRequestPanelComponent } from './components/server-request-panel/server-request-panel.component'
+import { WordFilterPanelComponent } from './components/word-filter-panel/word-filter-panel.component'
 
 @NgModule({
     declarations: [
         AppComponent,
         HomeComponent,
-        ServerRequestPanelComponent
+        ServerRequestPanelComponent,
+        WordFilterPanelComponent
     ],
     imports: [
         BrowserModule,
