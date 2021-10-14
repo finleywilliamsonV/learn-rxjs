@@ -40,8 +40,8 @@ export class HomeComponent implements OnInit {
     private responseCount: number
 
     // word filter observables
-    private readonly wordsWithSubject$: BehaviorSubject<string | null>
-    private readonly wordsWithoutSubject$: BehaviorSubject<string | null>
+    private readonly showWordsWithSubject$: BehaviorSubject<string | null>
+    private readonly showWordsWithoutSubject$: BehaviorSubject<string | null>
 
     /**
      * Constructor function
@@ -55,8 +55,8 @@ export class HomeComponent implements OnInit {
         this.responseCount = 0
 
         // initialize word filter vars
-        this.wordsWithSubject$ = new BehaviorSubject<string | null>(null)
-        this.wordsWithoutSubject$ = new BehaviorSubject<string | null>(null)
+        this.showWordsWithSubject$ = new BehaviorSubject<string | null>(null)
+        this.showWordsWithoutSubject$ = new BehaviorSubject<string | null>(null)
         this.wordsToFilter = [
             'calendar',
             'provincial',
@@ -105,14 +105,24 @@ export class HomeComponent implements OnInit {
 
     //* ------------------------- PUBLIC WORD FILTER METHODS ------------------------- *//
 
+    /**
+     * Pushes the next string to the observable
+     * @param $event
+     */
     onWordsWithChange($event: Event): void {
         const target: HTMLInputElement = $event.target as HTMLInputElement
-        this.wordsWithSubject$.next(target.value)
+        const nextValue: string | null = target.value === '' ? null : target.value
+        this.showWordsWithSubject$.next(nextValue)
     }
 
+    /**
+     * Pushes the next string to the observable
+     * @param $event
+     */
     onWordsWithoutChange($event: Event): void {
         const target: HTMLInputElement = $event.target as HTMLInputElement
-        this.wordsWithoutSubject$.next(target.value)
+        const nextValue: string | null = target.value === '' ? null : target.value
+        this.showWordsWithoutSubject$.next(nextValue)
     }
 
     //* ------------------------- PRIVATE METHODS ------------------------- *//
@@ -148,28 +158,41 @@ export class HomeComponent implements OnInit {
      * @returns Subscription to the mock server service
      */
     private setupWordFilterPanel(): Subscription {
+
+        // combine the two behavior subjects
         return combineLatest([
-            this.wordsWithSubject$,
-            this.wordsWithoutSubject$
+            this.showWordsWithSubject$,
+            this.showWordsWithoutSubject$
         ]).subscribe(
             ([
-                filterWordsWith,
-                filterWordsWithout
+                lettersToShowWords,
+                lettersToHideWords
             ]: (string | null)[]) => {
 
-                // RegExp = new RegExp('')
-
+                // filter wordsToFilter based on the letters in the inputs
                 this.wordsToFilter = this.wordsToFilter.map(
-                    (wordData) => ({
-                        word: wordData.word,
-                        visibility: /[asdf]/.test(wordData.word),
-                    })
+                    ({ word, }) => {
+
+                        // Show a word if it contains all the passed letters
+                        const showWordBecauseContainsAllLetters: boolean = lettersToShowWords
+                            ?.split('')
+                            .every((letter: string) => word.includes(letter))
+                            ?? true
+
+                        // Hide a word if it contains any of the passed letters
+                        const hideWordBecauseContainsAnyLetter: boolean = lettersToHideWords
+                            ?.split('')
+                            .some((letter: string) => word.includes(letter))
+                            ?? false
+
+                        // return the final object
+                        return {
+                            word,
+                            visibility: showWordBecauseContainsAllLetters && !hideWordBecauseContainsAnyLetter,
+                        }
+                    }
                 )
             }
         )
     }
-
-    // private wordContainsLetters(word: string, letters: string): boolean {
-
-    // }
 }
