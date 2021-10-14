@@ -19,7 +19,14 @@
                 <button
                     class="btn btn-primary ms-1"
                     (click)="sendFiveRequests()">
-                    Send Five
+                    Send 
+                </button>
+                <button
+                    class="btn btn-warning ms-1"
+                    id="continuousRequestButton"
+                    (mousedown)="startContinuousRequests()"
+                    (mouseup)="stopContinuousRequests()">
+                    Send Continuous
                 </button>
                 <button
                     class="btn btn-danger ms-1"
@@ -40,7 +47,7 @@
                     <label
                         class="form-check-label"
                         for="flexCheckDefault">
-                        Add Three
+                        Add Three to Response
                     </label>
                 </div>
         
@@ -53,7 +60,7 @@
                     <label
                         class="form-check-label"
                         for="flexCheckChecked">
-                        Filter Odds
+                        Filter Odd Responses
                     </label>
                 </div>
         

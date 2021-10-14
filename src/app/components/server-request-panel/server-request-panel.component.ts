@@ -1,6 +1,16 @@
 import { Component, OnInit } from '@angular/core'
-import { filter, map, tap } from 'rxjs/operators'
-import { Subscription } from 'rxjs'
+import {
+    filter,
+    map,
+    takeUntil,
+    tap
+} from 'rxjs/operators'
+import {
+    interval,
+    Observable,
+    Subject,
+    Subscription
+} from 'rxjs'
 import { MockServerService } from '../../services/mock-server.service'
 
 @Component({
@@ -25,12 +35,31 @@ export class ServerRequestPanelComponent implements OnInit {
     // count of response from the server
     private responseCount: number
 
+    // interval observable
+    private interval$: Observable<number>
+
+    // stop interval observable
+    private stopInterval$: Subject<boolean>
+
     // eslint-disable-next-line no-unused-vars
     constructor(private mockServer: MockServerService) {
+
+        // initialize server variables
         this.serverResponses = []
         this.responseCount = 0
+
+        // initialize the stop interval subject
+        this.stopInterval$ = new Subject<boolean>()
+
+        // initialze the interval observable with a pipe to stop on stopInterval$
+        this.interval$ = interval(100).pipe(
+            takeUntil(this.stopInterval$)
+        )
     }
 
+    /**
+     * On Init Hook
+     */
     ngOnInit(): void {
         this.setupServerPanel()
     }
@@ -49,6 +78,20 @@ export class ServerRequestPanelComponent implements OnInit {
      */
     sendFiveRequests(): void {
         this.mockServer.multiRequest(5)
+    }
+
+    /**
+     * Starts a continuous request stream
+     */
+    startContinuousRequests(): void {
+        this.interval$.subscribe(() => this.sendOneRequest())
+    }
+
+    /**
+     * Stops the continuous request stream
+     */
+    stopContinuousRequests(): void {
+        this.stopInterval$.next(false)
     }
 
     /**
