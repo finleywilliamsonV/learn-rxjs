@@ -31,7 +31,10 @@ export class HomeComponent implements OnInit {
     }
 
     // Words for words filter panel
-    public wordsToFilter: string[]
+    public wordsToFilter: {
+        word: string,
+        visibility: boolean
+    }[]
 
     // count of response from the server
     private responseCount: number
@@ -64,7 +67,10 @@ export class HomeComponent implements OnInit {
             'recognise',
             'leadership',
             'originate'
-        ]
+        ].map((word: string) => ({
+            word,
+            visibility: true,
+        }))
     }
 
     ngOnInit(): void {
@@ -72,7 +78,7 @@ export class HomeComponent implements OnInit {
         this.setupWordFilterPanel()
     }
 
-    //* PUBLIC SERVER METHODS *//
+    //* ------------------------- PUBLIC SERVER METHODS ------------------------- *//
 
     /**
      * Sends a single request to the server
@@ -97,7 +103,8 @@ export class HomeComponent implements OnInit {
         this.mockServer.resetServer()
     }
 
-    //* PUBLIC WORD FILTER METHODS *//
+    //* ------------------------- PUBLIC WORD FILTER METHODS ------------------------- *//
+
     onWordsWithChange($event: Event): void {
         const target: HTMLInputElement = $event.target as HTMLInputElement
         this.wordsWithSubject$.next(target.value)
@@ -108,7 +115,7 @@ export class HomeComponent implements OnInit {
         this.wordsWithoutSubject$.next(target.value)
     }
 
-    //* PRIVATE METHODS */
+    //* ------------------------- PRIVATE METHODS ------------------------- *//
 
     /**
      * Sets up the pipe and subscription to the mock server service
@@ -150,9 +157,19 @@ export class HomeComponent implements OnInit {
                 filterWordsWithout
             ]: (string | null)[]) => {
 
-                console.log('filterWordsWith:', filterWordsWith)
-                console.log('filterWordsWithout:', filterWordsWithout)
+                // RegExp = new RegExp('')
+
+                this.wordsToFilter = this.wordsToFilter.map(
+                    (wordData) => ({
+                        word: wordData.word,
+                        visibility: /[asdf]/.test(wordData.word),
+                    })
+                )
             }
         )
     }
+
+    // private wordContainsLetters(word: string, letters: string): boolean {
+
+    // }
 }

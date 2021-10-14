@@ -1,21 +1,21 @@
-<h1 class="mt-5">We're Running!</h1>
+<h1 class="mt-5">RxJS Practice!</h1>
 
 <!-- Font Awesome Icons -->
-<div
-    class="row mt-5"
-    id="faIcons">
-    Here's some font awesome icons!
-    <ul>
-        <li>
-            <fa-icon [icon]="faCoffee"></fa-icon>
-        </li>
-        <li>
-            <fa-icon [icon]="faAngry"></fa-icon>
-        </li>
-        <li>
-            <fa-icon [icon]="faAngryReg"></fa-icon>
-        </li>
-    </ul>
+<div class="row mt-5">
+    <div class="col">
+        Here's some font awesome icons!
+        <ul>
+            <li>
+                <fa-icon [icon]="faCoffee"></fa-icon>
+            </li>
+            <li>
+                <fa-icon [icon]="faAngry"></fa-icon>
+            </li>
+            <li>
+                <fa-icon [icon]="faAngryReg"></fa-icon>
+            </li>
+        </ul>
+    </div>
 </div>
 
 <!-- row 1 -->
@@ -97,8 +97,9 @@
                 <div class="row">
                     <div
                         *ngFor="let word of wordsToFilter"
-                        class="col-4 text-center my-1">
-                        {{word}}
+                        class="col-4 text-center my-1"
+                        [style.visibility]="word.visibility ? 'visible' : 'hidden'">
+                        {{word.word}}
                     </div>
                 </div>
 
@@ -139,22 +140,35 @@
         <div class="mt-2 p-3 outline word-filter-container">
 
             <label for="wordsWith">Filter Words with Letters:</label>
-            <input
-                name="wordsWith"
-                (input)="onWordsWithChange($event)"
-                type="text"
-                class="form-control">
+
+            <div class="input-group">
+                <input
+                    name="wordsWith"
+                    (input)="onWordsWithChange($event)"
+                    type="text"
+                    class="form-control">
+                <div class="input-group-append">
+                    <button class="btn btn-danger">Clear</button>
+                </div>
+            </div>
 
             <label
                 for="wordsWithout"
                 class="mt-2">
                 Filter Words without Letters:
             </label>
-            <input
-                name="wordsWithout"
-                (input)="onWordsWithoutChange($event)"
-                type="text"
-                class="form-control">
+
+            <div class="input-group">
+                <input
+                    name="wordsWithout"
+                    (input)="onWordsWithoutChange($event)"
+                    type="text"
+                    class="form-control">
+                <div class="input-group-append">
+                    <button class="btn btn-danger">Clear</button>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
