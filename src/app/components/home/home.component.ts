@@ -4,7 +4,7 @@ import {
     ElementRef,
     OnInit,
     ViewChild
-    } from '@angular/core'
+} from '@angular/core'
 import { faAngry as faAngryReg } from '@fortawesome/free-regular-svg-icons'
 import { faAngry, faCoffee, IconDefinition } from '@fortawesome/free-solid-svg-icons'
 import { filter, map, tap } from 'rxjs/operators'
@@ -30,7 +30,7 @@ export class HomeComponent implements OnInit {
 
     // options for processing server responses
     public readonly processingOptions = {
-        addOne: false,
+        addThree: false,
         filterOdds: false,
     }
 
@@ -168,7 +168,7 @@ export class HomeComponent implements OnInit {
                 () => this.responseCount++
             ),
             map(
-                (value: number) => (this.processingOptions.addOne ? value + 1 : value)
+                (value: number) => (this.processingOptions.addThree ? value + 3 : value)
             ),
             filter(
                 (value: number) => (this.processingOptions.filterOdds ? value % 2 === 1 : true)
