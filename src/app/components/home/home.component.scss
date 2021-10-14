@@ -1,3 +1,5 @@
+@use '../../../style/partials';
+
 .outline {
     border: 1px solid black;
     padding: 5px;
@@ -12,4 +14,12 @@
 
 .word-filter-container {
     height: 18vh;
+}
+
+.feature-container-header {
+    background-color: partials.$container-bg-dark;
+}
+
+.feature-container-body {
+    background-color: partials.$container-bg-light;
 }

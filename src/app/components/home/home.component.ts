@@ -1,8 +1,7 @@
-/* eslint-disable class-methods-use-this */
+import { BehaviorSubject, combineLatest, Subscription } from 'rxjs'
 import { Component, OnInit } from '@angular/core'
 import { faAngry as faAngryReg } from '@fortawesome/free-regular-svg-icons'
 import { faAngry, faCoffee, IconDefinition } from '@fortawesome/free-solid-svg-icons'
-import { BehaviorSubject, combineLatest, Subscription } from 'rxjs'
 import { filter, map, tap } from 'rxjs/operators'
 import { MockServerService } from '../../services/mock-server.service'
 

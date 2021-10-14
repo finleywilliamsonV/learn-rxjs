@@ -1,0 +1,18 @@
+/* You can add global styles to this file, and also import other style files */
+
+@use './partials';
+
+$danger: #B20650;
+$primary: #3A6EA5;
+$secondary: #577590;
+$success: #43aa8b;
+$info: #90be6d;
+$warning: #f8961e;
+$light: #f8f9fa;
+$dark: #343a40;
+
+@import "../../node_modules/bootstrap/scss/bootstrap.scss";
+
+body {
+    background-color: partials.$main-bg;
+}

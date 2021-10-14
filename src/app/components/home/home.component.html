@@ -3,7 +3,7 @@
 <!-- Font Awesome Icons -->
 <div class="row mt-5">
     <div class="col">
-        Here's some font awesome icons!
+        Here are some font awesome icons!
         <ul>
             <li>
                 <fa-icon [icon]="faCoffee"></fa-icon>
@@ -25,10 +25,10 @@
     <div class="col-6">
 
         <!-- panel title -->
-        <p class="outline text-center p-2">Server Requests</p>
+        <p class="mb-2 p-2 outline text-center feature-container-header ">Server Requests</p>
 
         <!-- button/filter panel -->
-        <div class="outline p-4">
+        <div class="outline p-4 feature-container-body">
 
             <!-- buttons -->
             <div
@@ -88,10 +88,10 @@
     <div class="col-6">
 
         <!-- title -->
-        <p class="outline text-center p-2">Words to Filter</p>
+        <p class="mb-2 p-2 outline text-center feature-container-header">Words to Filter</p>
 
         <!-- words container -->
-        <div class="mt-2 p-4 outline">
+        <div class="mt-2 p-4 outline feature-container-body">
             <div class="container">
 
                 <div class="row">
@@ -118,10 +118,10 @@
     <div class="col-6">
 
         <!-- title -->
-        <p class="outline text-center p-2">Server Responses</p>
+        <p class="mb-2 p-2 outline text-center feature-container-header">Server Responses</p>
 
         <!-- response container -->
-        <div class="mt-2 response-container outline">
+        <div class="mt-2 response-container outline feature-container-body">
             <ul>
                 <li *ngFor="let response of serverResponses">
                     Response {{response.responseNumber}} --> Value: {{response.responseValue}}
@@ -134,10 +134,10 @@
     <div class="col-6">
 
         <!-- title -->
-        <p class="outline text-center p-2">Word Filters</p>
+        <p class="mb-2 p-2 outline text-center feature-container-header">Word Filters</p>
 
         <!-- filter container -->
-        <div class="mt-2 p-3 outline word-filter-container">
+        <div class="mt-2 p-3 outline word-filter-container feature-container-body">
 
             <label for="wordsWith">Show Words with All of These Letters:</label>
 
