@@ -45,6 +45,7 @@
                 "ts": "never"
             }
         ],
+        "implicit-arrow-linebreak": "off",
         "import/prefer-default-export": "off",
         "indent": [
             "error",

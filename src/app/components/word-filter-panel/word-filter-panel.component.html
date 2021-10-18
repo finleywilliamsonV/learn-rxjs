@@ -9,9 +9,9 @@
                 class="ms-2"
                 [icon]="faSyncAlt"
                 [title]="'Refresh Word List'"
-                (click)="notifyWordListRefresh()"
-                [spin]="iconData.isHovering || iconData.isProcessing"
-                transform="{{ iconData.isHovering ? 'grow-1' : '' }}"
+                (click)="!iconData.isProcessing && notifyWordListRefresh()"
+                [spin]="iconData.isProcessing"
+                transform="{{ iconData.isHovering && !iconData.isProcessing ? 'grow-2' : '' }}"
                 (mouseenter)="iconData.isHovering = true"
                 (mouseleave)="iconData.isHovering = false"
                 [class.isProcessing]="iconData.isProcessing">

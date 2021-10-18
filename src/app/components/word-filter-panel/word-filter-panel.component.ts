@@ -4,8 +4,9 @@ import {
 import {
     BehaviorSubject, combineLatest, Subject, Subscription
 } from 'rxjs'
-import { finalize, skipUntil, takeUntil } from 'rxjs/operators'
+import { delay, skipUntil, tap } from 'rxjs/operators'
 import { faSyncAlt, IconDefinition } from '@fortawesome/free-solid-svg-icons'
+import { debounce } from 'lodash'
 import { RandomWordsService } from '../../services/random-words.service'
 
 @Component({
@@ -29,10 +30,12 @@ export class WordFilterPanelComponent implements OnInit {
     }[]
 
     // word filter observables
-    private readonly refreshWordList$: Subject<'refresh'>
     private readonly wordsFetched$: Subject<'fetched'>
     private readonly wordsWithFilterSubject$: BehaviorSubject<string | null>
     private readonly wordsWithoutFilterSubject$: BehaviorSubject<string | null>
+
+    // word list subscription
+    private wordListSubscription!: Subscription
 
     // view children
     @ViewChild('wordsWithInput')
@@ -55,21 +58,16 @@ export class WordFilterPanelComponent implements OnInit {
         }
 
         // initialize word filter vars
-        this.refreshWordList$ = new Subject<'refresh'>()
         this.wordsFetched$ = new Subject<'fetched'>()
         this.wordsWithFilterSubject$ = new BehaviorSubject<string | null>(null)
         this.wordsWithoutFilterSubject$ = new BehaviorSubject<string | null>(null)
-
-        // fetch the word list from the server
-        console.log('initialize from constructor')
-        this.initializeWordList()
-
     }
 
     /**
      * On Init Hook
      */
     ngOnInit(): void {
+        this.initializeWordList()
         this.setupWordFilterPanel()
     }
 
@@ -115,23 +113,28 @@ export class WordFilterPanelComponent implements OnInit {
      * Pushes a value to the refreshWordList$ observable to complete / refresh the word list observable
      */
     notifyWordListRefresh(): void {
-        console.log('notifying refresh')
-        this.refreshWordList$.next('refresh')
+        this.wordListSubscription.unsubscribe()
+        this.initializeWordList()
     }
+
+    //* ------------------------- PRIVATE METHODS ------------------------- *//
 
     /**
      * Initializes the word list
      */
-    initializeWordList(): void {
-
-        console.log('initializing word list')
+    private initializeWordList(): void {
 
         // subscribe to random words service
-        this.randomWordsService.getWords(9)
-
-        // run until refreshWordList pushes a value, then, the function calls itself
+        this.wordListSubscription = this.randomWordsService.getWords(9)
+            .pipe(
+                tap(() => {
+                    this.iconData.isProcessing = true
+                }),
+                delay(2000)
+            )
             .subscribe((responseWords: string[]) => {
-                console.log('responseWords:', responseWords)
+
+                // map the words onto objects with a visibility prop
                 this.wordsToFilter = responseWords.map(
                     (word: string) => ({
                         word,
@@ -141,10 +144,11 @@ export class WordFilterPanelComponent implements OnInit {
 
                 // notify the words are fetched
                 this.wordsFetched$.next('fetched')
+
+                // notify the icon to stop spinning
+                this.iconData.isProcessing = false
             })
     }
-
-    //* ------------------------- PRIVATE METHODS ------------------------- *//
 
     /**
      * Sets up the pipe and subscription to the word filter observables
@@ -157,15 +161,8 @@ export class WordFilterPanelComponent implements OnInit {
             this.wordsWithFilterSubject$,
             this.wordsWithoutFilterSubject$
         ])
-            .pipe(
-                takeUntil(this.refreshWordList$),
-                finalize(() => {
-                    console.log('complete')
-                    this.initializeWordList()
-                    this.setupWordFilterPanel()
-                })
-            )
-            // wait until the API has returned the word data
+
+            // don't run until the words are fetched
             .pipe(
                 skipUntil(this.wordsFetched$)
             )
