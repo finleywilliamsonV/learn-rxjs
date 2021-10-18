@@ -2,7 +2,23 @@
 
     <div class="col-12 mb-4">
         <!-- title -->
-        <p class="mb-2 p-2 outline text-center feature-container-header">Words to Filter</p>
+        <p class="mb-2 p-2 outline text-center feature-container-header">
+            Words to Filter
+            <fa-icon
+                id="syncIcon"
+                class="ms-2"
+                [icon]="faSyncAlt"
+                [title]="'Refresh Word List'"
+                (click)="notifyWordListRefresh()"
+                [spin]="iconData.isHovering || iconData.isProcessing"
+                transform="{{ iconData.isHovering ? 'grow-1' : '' }}"
+                (mouseenter)="iconData.isHovering = true"
+                (mouseleave)="iconData.isHovering = false"
+                [class.isProcessing]="iconData.isProcessing">
+            </fa-icon>
+
+            
+        </p>
 
         <!-- words container -->
         <div class="mt-2 p-4 outline feature-container-body">

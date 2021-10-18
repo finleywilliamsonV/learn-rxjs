@@ -23,3 +23,11 @@
 .feature-container-body {
     background-color: partials.$container-bg-light;
 }
+
+#syncIcon {
+    color: partials.$container-accent;
+}
+
+.isProcessing {
+    color: partials.$container-bg-light
+}

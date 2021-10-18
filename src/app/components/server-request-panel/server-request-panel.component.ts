@@ -110,6 +110,7 @@ export class ServerRequestPanelComponent implements OnInit {
      * @returns Subscription to the mock server service
      */
     private setupServerPanel(): Subscription {
+
         // subscribe to the server responses
         return this.mockServer.serverResponses.pipe(
             tap(
