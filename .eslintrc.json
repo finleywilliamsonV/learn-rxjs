@@ -57,10 +57,10 @@
             120
         ],
         "no-console": "off",
-        "no-empty-function": "warn",
+        "no-empty-function": ["warn", {"allow": ["constructors"]}],
         "no-plusplus": "off",
         "no-unused-vars": "warn",
-        "no-useless-constructor": "warn",
+        "no-useless-constructor": "off",
         "padded-blocks": "off",
         "semi": [
             "error",

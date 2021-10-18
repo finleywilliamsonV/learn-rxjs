@@ -1,7 +1,11 @@
 import {
     Component, ElementRef, OnInit, ViewChild
 } from '@angular/core'
-import { BehaviorSubject, combineLatest, Subscription } from 'rxjs'
+import {
+    BehaviorSubject, combineLatest, Subject, Subscription
+} from 'rxjs'
+import { skipUntil } from 'rxjs/operators'
+import { RandomWordsService } from '../../services/random-words.service'
 
 @Component({
     selector: 'word-filter-panel',
@@ -11,12 +15,13 @@ import { BehaviorSubject, combineLatest, Subscription } from 'rxjs'
 export class WordFilterPanelComponent implements OnInit {
 
     // Words for words filter panel
-    public wordsToFilter: {
+    public wordsToFilter!: {
         word: string,
         visibility: boolean
     }[]
 
     // word filter observables
+    private readonly wordsFetched$: Subject<'fetched'>
     private readonly wordsWithFilterSubject$: BehaviorSubject<string | null>
     private readonly wordsWithoutFilterSubject$: BehaviorSubject<string | null>
 
@@ -27,26 +32,36 @@ export class WordFilterPanelComponent implements OnInit {
     @ViewChild('wordsWithoutInput')
     private wordsWithoutInput!: ElementRef<HTMLInputElement>
 
-    constructor() {
+    /**
+     * Constructor
+     * @param randomWordsService
+     */
+    // eslint-disable-next-line no-unused-vars
+    constructor(private randomWordsService: RandomWordsService) {
+
         // initialize word filter vars
+        this.wordsFetched$ = new Subject<'fetched'>()
         this.wordsWithFilterSubject$ = new BehaviorSubject<string | null>(null)
         this.wordsWithoutFilterSubject$ = new BehaviorSubject<string | null>(null)
-        this.wordsToFilter = [
-            'calendar',
-            'provincial',
-            'prospect',
-            'announce',
-            'exotic',
-            'fitness',
-            'recognise',
-            'leadership',
-            'originate'
-        ].map((word: string) => ({
-            word,
-            visibility: true,
-        }))
+
+        // subscribe to random words service
+        this.randomWordsService.getWords(9)
+            .subscribe((responseWords: string[]) => {
+                this.wordsToFilter = responseWords.map(
+                    (word: string) => ({
+                        word,
+                        visibility: true,
+                    })
+                )
+
+                // notify the words are fetched
+                this.wordsFetched$.next('fetched')
+            })
     }
 
+    /**
+     * On Init Hook
+     */
     ngOnInit(): void {
         this.setupWordFilterPanel()
     }
@@ -59,8 +74,8 @@ export class WordFilterPanelComponent implements OnInit {
      */
     onWordsWithChange($event: Event): void {
         const target: HTMLInputElement = $event.target as HTMLInputElement
-        const nextValue: string | null = target.value === '' ? null : target.value
-        this.wordsWithFilterSubject$.next(nextValue)
+        // push null if string is empty
+        this.wordsWithFilterSubject$.next(target.value || null)
     }
 
     /**
@@ -69,8 +84,8 @@ export class WordFilterPanelComponent implements OnInit {
      */
     onWordsWithoutChange($event: Event): void {
         const target: HTMLInputElement = $event.target as HTMLInputElement
-        const nextValue: string | null = target.value === '' ? null : target.value
-        this.wordsWithoutFilterSubject$.next(nextValue)
+        // push null if string is empty
+        this.wordsWithoutFilterSubject$.next(target.value || null)
     }
 
     /**
@@ -101,37 +116,43 @@ export class WordFilterPanelComponent implements OnInit {
         return combineLatest([
             this.wordsWithFilterSubject$,
             this.wordsWithoutFilterSubject$
-        ]).subscribe(
-            ([
-                lettersToShowWords,
-                lettersToHideWords
-            ]: (string | null)[]) => {
+        ])
+            // wait until the API has returned the word data
+            .pipe(
+                skipUntil(this.wordsFetched$)
+            )
 
-                // filter wordsToFilter based on the letters in the inputs
-                this.wordsToFilter = this.wordsToFilter.map(
-                    ({ word, }) => {
+            // subscribe to the combined observables
+            .subscribe(
+                ([
+                    lettersToShowWords,
+                    lettersToHideWords
+                ]: (string | null)[]) => {
 
-                        // Show a word if it contains all the passed letters
-                        const showWordBecauseContainsAllLetters: boolean = lettersToShowWords
-                            ?.split('')
-                            .every((letter: string) => word.includes(letter))
+                    // filter wordsToFilter based on the letters in the inputs
+                    this.wordsToFilter = this.wordsToFilter.map(
+                        ({ word, }) => {
+
+                            // Show a word if it contains all the passed letters
+                            const showWordBecauseContainsAllLetters: boolean = lettersToShowWords
+                                ?.split('')
+                                .every((letter: string) => word.includes(letter))
                             ?? true
 
-                        // Hide a word if it contains any of the passed letters
-                        const hideWordBecauseContainsAnyLetter: boolean = lettersToHideWords
-                            ?.split('')
-                            .some((letter: string) => word.includes(letter))
+                            // Hide a word if it contains any of the passed letters
+                            const hideWordBecauseContainsAnyLetter: boolean = lettersToHideWords
+                                ?.split('')
+                                .some((letter: string) => word.includes(letter))
                             ?? false
 
-                        // return the final object
-                        return {
-                            word,
-                            visibility: showWordBecauseContainsAllLetters && !hideWordBecauseContainsAnyLetter,
+                            // return the final object
+                            return {
+                                word,
+                                visibility: showWordBecauseContainsAllLetters && !hideWordBecauseContainsAnyLetter,
+                            }
                         }
-                    }
-                )
-            }
-        )
+                    )
+                }
+            )
     }
-
 }
