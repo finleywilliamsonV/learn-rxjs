@@ -1,14 +1,17 @@
 import {
-    Component, ElementRef, OnInit, ViewChild
-} from '@angular/core'
-import {
-    BehaviorSubject, combineLatest, Subject, Subscription
+    BehaviorSubject,
+    combineLatest,
+    Subject,
+    Subscription
 } from 'rxjs'
 import {
-    delay, skipUntil, take, tap
-} from 'rxjs/operators'
+    Component,
+    ElementRef,
+    OnInit,
+    ViewChild
+} from '@angular/core'
+import { delay, skipUntil, tap } from 'rxjs/operators'
 import { faSyncAlt, IconDefinition } from '@fortawesome/free-solid-svg-icons'
-import { debounce } from 'lodash'
 import { RandomWordsService } from '../../services/random-words.service'
 
 @Component({
