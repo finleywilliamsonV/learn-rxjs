@@ -4,7 +4,9 @@ import {
 import {
     BehaviorSubject, combineLatest, Subject, Subscription
 } from 'rxjs'
-import { delay, skipUntil, tap } from 'rxjs/operators'
+import {
+    delay, skipUntil, take, tap
+} from 'rxjs/operators'
 import { faSyncAlt, IconDefinition } from '@fortawesome/free-solid-svg-icons'
 import { debounce } from 'lodash'
 import { RandomWordsService } from '../../services/random-words.service'
@@ -34,8 +36,9 @@ export class WordFilterPanelComponent implements OnInit {
     private readonly wordsWithFilterSubject$: BehaviorSubject<string | null>
     private readonly wordsWithoutFilterSubject$: BehaviorSubject<string | null>
 
-    // word list subscription
+    // word list subscriptions
     private wordListSubscription!: Subscription
+    private wordFilterSubscription!: Subscription
 
     // view children
     @ViewChild('wordsWithInput')
@@ -114,7 +117,9 @@ export class WordFilterPanelComponent implements OnInit {
      */
     notifyWordListRefresh(): void {
         this.wordListSubscription.unsubscribe()
+        this.wordFilterSubscription.unsubscribe()
         this.initializeWordList()
+        this.setupWordFilterPanel()
     }
 
     //* ------------------------- PRIVATE METHODS ------------------------- *//
@@ -154,10 +159,10 @@ export class WordFilterPanelComponent implements OnInit {
      * Sets up the pipe and subscription to the word filter observables
      * @returns Subscription to the mock server service
      */
-    private setupWordFilterPanel(): Subscription {
+    private setupWordFilterPanel(): void {
 
         // combine the two behavior subjects
-        return combineLatest([
+        this.wordFilterSubscription = combineLatest([
             this.wordsWithFilterSubject$,
             this.wordsWithoutFilterSubject$
         ])
@@ -173,6 +178,9 @@ export class WordFilterPanelComponent implements OnInit {
                     lettersToShowWords,
                     lettersToHideWords
                 ]: (string | null)[]) => {
+
+                    console.log('\nlettersToShowWords:', lettersToShowWords)
+                    console.log('lettersToHideWords:', lettersToHideWords)
 
                     // filter wordsToFilter based on the letters in the inputs
                     this.wordsToFilter = this.wordsToFilter.map(
