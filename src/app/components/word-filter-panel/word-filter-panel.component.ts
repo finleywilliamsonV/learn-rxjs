@@ -18,6 +18,7 @@ import { RandomWordsService } from '../../services/random-words.service'
  * Change #1
  * Change #2
  * Change #3
+ * Change #4
  */
 
 @Component({
