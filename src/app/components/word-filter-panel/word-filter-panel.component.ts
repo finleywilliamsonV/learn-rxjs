@@ -1,18 +1,25 @@
 import {
-    BehaviorSubject,
-    combineLatest,
-    Subject,
-    Subscription
-} from 'rxjs'
-import {
     Component,
     ElementRef,
     OnInit,
     ViewChild
 } from '@angular/core'
-import { delay, skipUntil, tap } from 'rxjs/operators'
 import { faSyncAlt, IconDefinition } from '@fortawesome/free-solid-svg-icons'
+import {
+    BehaviorSubject,
+    combineLatest,
+    Subject,
+    Subscription
+} from 'rxjs'
+import { delay, skipUntil, tap } from 'rxjs/operators'
 import { RandomWordsService } from '../../services/random-words.service'
+
+/**
+ * Change #1
+ * Change #2
+ * Change #3
+ * Change #4
+ */
 
 @Component({
     selector: 'word-filter-panel',
